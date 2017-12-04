@@ -1,0 +1,15 @@
+October 26,
+
+    Researched Python libraries for turbo codes and error correction. Found a library called CommPy
+    which has functions for generating Turbo codes for messages. Although the documentation is somewhat
+    lacking, it seems like it will be sufficient for demonstrative purposes for our submission. Our
+    off-the-grid solution relies on strong forward-error-correction since the ham radio bridges will
+    likely have high packet loss and noise. With CommPy and Scapy, we can simulate FEC codes on real
+    traffic and encapsulate it in the appropriate layer with Scapy.
+
+November 2, 4:23PM-7:40PM:
+
+    Generated a minimal framework for the turbo encoding/decoding scheme. The 'pip' distribution of
+    CommPy has some errors, so I pulled down the development branch of CommPy. For small messages, the
+    error correction seems to work well. I will experiment with longer messages in the upcoming days and
+    make the functions more generic to accept arbitrary length message streams.
