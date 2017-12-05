@@ -1,11 +1,17 @@
-OBJS = turbo_test.o
+OBJS = SimpleTurbo.o Transcoder.o
 CC = /usr/bin/g++
 DEBUG = -g
-CFLAGS = -c
+CFLAGS = -c -Ofast
 LFLAGS = -litpp
 
-turbo_test: $(OBJS)
-	$(CC) -o turbo_test $(OBJS) $(LFLAGS)
+SimpleTurbo: $(OBJS)
+	$(CC) -o SimpleTurbo $(OBJS) $(LFLAGS)
 
-turbo_test.o: turbo_test.cpp
-	$(CC) $(CFLAGS) turbo_test.cpp
+SimpleTurbo.o: SimpleTurbo.cpp Transcoder.h
+	$(CC) $(CFLAGS) SimpleTurbo.cpp
+
+Transcoder.o: Transcoder.cpp
+	$(CC) $(CFLAGS) Transcoder.cpp
+
+clean:
+	rm -f $(OBJS)
