@@ -7,11 +7,10 @@ Transcoder::Transcoder()
 {
     generator = ivec(2);
     generator(0) = 013;
-    generator(1) = 013;
-    constraint = 4;
+    generator(1) = 015;
+    constraint = 6;
     interleaver = wcdma_turbo_interleaver_sequence(320);
     codec.set_parameters(generator, generator, constraint, interleaver);
-    ones = ones_b(320);
 }
 
 
@@ -21,14 +20,17 @@ void Transcoder::encode(bvec *input, unsigned int len, bvec *output)
     cout << endl;
 
     codec.encode(*input, *output);
+    cout << codec.get_Ncoded() << endl;
 }
 
 void Transcoder::decode(bvec *input, unsigned int len, bvec *output)
 {
-    codec.decode(to_vec(*input), *output);
-    for(int i=0;i<output->size();i++) (*output)(i) ^= 1;
-    
-    
-    for(int i=0;i<output->size();i++) cout << (*output)(i);
-    cout << endl;
+    codec.decode(to_vec(*input), *output); 
+    for(int i=0;i<output->size();i++) (*output)(i) ^= 1;    
+}
+
+void Transcoder::check(bvec *input, unsigned int len, bvec *output, bvec *ground_truth)
+{ 
+    codec.decode(to_vec(*input), *output, *ground_truth);
+    for(int i=0;i<output->size();i++) (*output)(i) ^= 1;        
 }

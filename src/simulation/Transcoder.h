@@ -17,4 +17,5 @@ class Transcoder
         Transcoder();
         void encode(bvec *input, unsigned int len, bvec *output);
         void decode(bvec *input, unsigned int len, bvec *output);
+        void check(bvec *input, unsigned int len, bvec *output, bvec *ground_truth);
 };
