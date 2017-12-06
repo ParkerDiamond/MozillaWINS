@@ -7,3 +7,6 @@
 
 ## Scripts
 - `fetch_top_n_sites.py`: This pulls the top `n` sites data. The usage is `./fetch_top_n_sites.py majestic_million.csv 1000` where 1000 can be replaced for any other value of `n` up to 999,999 (which is the number of sites in the majestic million data).
+
+## Data Sources
+- The Majestic Million comes from https://majestic.com/reports/majestic-million and https://blog.majestic.com/development/majestic-million-csv-daily/.
