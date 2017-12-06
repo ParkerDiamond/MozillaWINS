@@ -4,6 +4,7 @@
 
 # Python Standard Library
 import argparse
+import random
 
 # Local modules
 import hambase
@@ -12,6 +13,7 @@ import client
 
 # 3rd Party Libraries
 import anyconfig
+import requests
 
 class SimulationConfig:
     """
@@ -56,9 +58,13 @@ class Simulation:
 
         self.clients = []
         for client_num in range(num_clients):
-            self.clients.append(client.Client(self))
+            self.clients.append(client.Client(self, client_num))
 
         self.hambase = hambase.HamBase(self)
+
+        self.sites = []
+        with open('../top-1000.txt', 'r') as f:
+            self.sites = [line.strip() for line in f if line.strip() != '']
 
     def load_sites(self):
         with open(self.config.top_sites_file, 'r') as top_sites:
@@ -77,12 +83,33 @@ class Simulation:
                     site = Site(rank, sitename, popularity_subnets, popularity_ips)
                     sites[sitename] = site
 
+
     def print_config(self):
         print("Simulation config:")
         print("{}".format(self.config.config_dict))
 
     def run_round(self, round_num):
         print("Running round number {}!".format(round_num))
+        self.hambase.round_init()
+
+        for client in self.clients:
+            client.update_round()
+
+    def random_site(self):
+        while True:
+            site = random.choice(self.sites)
+            try:
+                self.netbase.fetch_site(site)
+            except requests.RequestException:
+                self.sites.remove(site)
+            else:
+                return site
+
+                
+            
+            
+            
+        
 
 
 def setup_argparser():

@@ -38,7 +38,7 @@ class Cache:
             Cache a site in the internal cache dictionary
         """
         site = Site(sitename, content, latency)
-        self.cache[sitename] = site_object
+        self.cache[sitename] = site
         return site
 
 
@@ -53,7 +53,7 @@ class NetBase:
         """
         self.cache = Cache()
 
-    def fetch_site(site):
+    def fetch_site(self, site):
         """
             Take sitename and either return the cached content or make the request, cache the site, then return the content
         """
@@ -61,6 +61,9 @@ class NetBase:
         if cached_site:
             return cached_site.content, cached_site.latency
         else:
-            response = requests.get(site)
-            self.cache.cache_site(site, response.content, response.elapsed)
-            return response.content, response.elapsed
+            url = 'http://' + site
+            response = requests.get(url)
+            latency = response.elapsed.total_seconds()
+            self.cache.cache_site(site, response.content, latency)
+            return response.content, latency
+
