@@ -14,4 +14,4 @@ Transcoder.o: Transcoder.cpp
 	$(CC) $(CFLAGS) Transcoder.cpp
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) client.o server.o client server SimpleTurbo
