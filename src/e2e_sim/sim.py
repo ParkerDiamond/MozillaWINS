@@ -46,7 +46,7 @@ class Simulation:
         for client_num in range(num_clients):
             self.clients.append(client.Client(self))
 
-        self.hambase = hambase.HamBase(self, self.netbase, self.clients)
+        self.hambase = hambase.HamBase(self)
 
     def print_config(self):
         print("Simulation config:")

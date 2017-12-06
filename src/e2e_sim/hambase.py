@@ -1,10 +1,9 @@
 import radio
 
 class HamBase:
-    def __init__(self, sim, netbase, clients):
+    def __init__(self, sim):
         self.sim = sim
-        self.netbase = netbase
-        self.clients = clients
+        self.netbase = sim.netbase
 
         self.max_cache = self.sim.config.max_cache
         self.cached = {}
@@ -58,24 +57,13 @@ class HamBase:
     def cache(self, site):
         # TODO other caching policies?
 
-        cache = self.cached.items()
-        lru = min(self.cached.items(), key=lambda x: x[1])
-        lru_site = lru[0]
-        del self.cached[lru_site]
+        while len(self.cached) >= self.max_cache:
+            cache = self.cached.items()
+            lru = min(self.cached.items(), key=lambda x: x[1])
+            lru_site = lru[0]
+            del self.cached[lru_site]
 
         self.cache_n += 1
         self.cached[site] = self.cache_n
-
-
-
-
-
-
-
-
-
-
-
-
 
 
