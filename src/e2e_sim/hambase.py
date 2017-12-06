@@ -5,7 +5,7 @@ class HamBase:
         self.netbase = netbase
         self.clients = clients
 
-        self.max_cache
+        self.max_cache = None
         self.cached = {}
         self.cache_n = 0
 
@@ -42,7 +42,6 @@ class HamBase:
         self.cache_n += 1
         self.cached[site] = self.cache_n
 
-        
 
 
 
@@ -53,5 +52,6 @@ class HamBase:
 
 
 
-        
+
+
 
