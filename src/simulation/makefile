@@ -1,4 +1,4 @@
-OBJS = SimpleTurbo.o Transcoder.o client.o server.o
+OBJS = SimpleTurbo.o Transcoder.o
 CC = /usr/bin/g++
 DEBUG = -g
 CFLAGS = -c -Ofast
@@ -14,4 +14,4 @@ Transcoder.o: Transcoder.cpp
 	$(CC) $(CFLAGS) Transcoder.cpp
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) client.o server.o client server SimpleTurbo
