@@ -50,7 +50,7 @@ class Simulation:
 
     def print_config(self):
         print("Simulation config:")
-        print("{}".format(self.config))
+        print("{}".format(self.config.config_dict))
 
     def run_round(self, round_num):
         print("Running round number {}!".format(round_num))
