@@ -1,6 +1,6 @@
 #include <iostream>
 #include <functional>
-#include <itpp/comm/turbo.h>
+#include <itpp/itcomm.h>
 
 using namespace std;
 using namespace itpp;
@@ -8,14 +8,13 @@ using namespace itpp;
 class Transcoder
 {
     private:
+        BPSK bpsk;
         Turbo_Codec codec;
         ivec generator, interleaver;
-        int constraint;
-        bvec ones;
+        int constraint, block_size;
 
     public:
         Transcoder();
-        void encode(bvec *input, unsigned int len, bvec *output);
-        void decode(bvec *input, unsigned int len, bvec *output);
-        void check(bvec *input, unsigned int len, bvec *output, bvec *ground_truth);
+        void encode(bvec &input, vec &trans_symbols);
+        void decode(vec &trans_symbols, bvec &output);
 };

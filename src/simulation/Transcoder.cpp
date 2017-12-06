@@ -5,32 +5,31 @@ using namespace itpp;
 
 Transcoder::Transcoder()
 {
-    generator = ivec(2);
+    generator = ivec(3);
     generator(0) = 013;
     generator(1) = 015;
-    constraint = 6;
+    constraint = 4;
+    block_size = 320;
+
     interleaver = wcdma_turbo_interleaver_sequence(320);
     codec.set_parameters(generator, generator, constraint, interleaver);
 }
 
 
-void Transcoder::encode(bvec *input, unsigned int len, bvec *output)
+void Transcoder::encode(bvec &input, vec &trans_symbols)
 {
-    for(int i=0;i<input->size();i++) cout << (*input)(i);
-    cout << endl;
+    int padding;
+    bvec padded_input, encoded;
 
-    codec.encode(*input, *output);
-    cout << codec.get_Ncoded() << endl;
+    padding = input.size() % block_size;
+    if(padding) padded_input = concat(input, zeros_b(padding));
+    else padded_input = input;
+
+    codec.encode(padded_input, encoded);
+    bpsk.modulate_bits(encoded, trans_symbols);
 }
 
-void Transcoder::decode(bvec *input, unsigned int len, bvec *output)
+void Transcoder::decode(vec &trans_symbols, bvec &output)
 {
-    codec.decode(to_vec(*input), *output); 
-    for(int i=0;i<output->size();i++) (*output)(i) ^= 1;    
-}
-
-void Transcoder::check(bvec *input, unsigned int len, bvec *output, bvec *ground_truth)
-{ 
-    codec.decode(to_vec(*input), *output, *ground_truth);
-    for(int i=0;i<output->size();i++) (*output)(i) ^= 1;        
+    codec.decode(trans_symbols, output); 
 }
