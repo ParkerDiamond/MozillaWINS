@@ -5,7 +5,7 @@ class HamBase:
         self.netbase = netbase
         self.clients = clients
 
-        self.max_cache = None
+        self.max_cache = self.sim.config.max_cache
         self.cached = {}
         self.cache_n = 0
 
