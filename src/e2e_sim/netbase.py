@@ -59,8 +59,8 @@ class NetBase:
         """
         cached_site = self.cache.get_site(site)
         if cached_site:
-            return cached_site.content
+            return cached_site.content, cached_site.latency
         else:
             response = requests.get(site)
             self.cache.cache_site(site, response.content, response.elapsed)
-            return response.content
+            return response.content, response.elapsed

@@ -25,11 +25,11 @@ class HamBase:
             return self.sim.config.cache_latency
 
         req_data = self.generate_request(site)
-        resp_data = self.netbase.fetch_site(site)
+        resp_data, net_latency = self.netbase.fetch_site(site)
 
         total_txd = 0
         total_rxd = 0
-        latency = 0
+        latency = net_latency
         while True:
             attempts += 1
             success, txd = radio.attempt_transmission(req_data, error)
