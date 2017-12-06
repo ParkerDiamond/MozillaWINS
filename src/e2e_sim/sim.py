@@ -2,8 +2,10 @@
     Simulation Framework
 """
 
+
 # Python Standard Library
 import argparse
+import csv
 import random
 
 # Local modules
@@ -14,6 +16,7 @@ import client
 # 3rd Party Libraries
 import anyconfig
 import requests
+
 
 class SimulationConfig:
     """
@@ -47,7 +50,8 @@ class Simulation:
         self.config = SimulationConfig()
         self.config.load_config(config_file)
 
-        self.sites = dict()
+        self.full_sites = dict()
+        self.sites = []
         self.load_sites()
 
         self.netbase = netbase.NetBase()
@@ -62,13 +66,9 @@ class Simulation:
 
         self.hambase = hambase.HamBase(self)
 
-        self.sites = []
-        with open('../top-1000.txt', 'r') as f:
-            self.sites = [line.strip() for line in f if line.strip() != '']
-
     def load_sites(self):
         with open(self.config.top_sites_file, 'r') as top_sites:
-            reader = csv.reader(csvfile)
+            reader = csv.DictReader(top_sites)
             for i, row in enumerate(reader):
                 if i > self.config.sites_to_load:
                     break
@@ -78,38 +78,33 @@ class Simulation:
                 popularity_subnets = int(row['RefSubNets'])
                 popularity_ips = int(row['RefIPs'])
 
-                existing_site = self.sites.get(sitename)
+                existing_site = self.full_sites.get(sitename)
                 if not existing_site:
                     site = Site(rank, sitename, popularity_subnets, popularity_ips)
-                    sites[sitename] = site
-
+                    self.full_sites[sitename] = site
+                    self.sites.append((sitename, popularity_subnets))
 
     def print_config(self):
         print("Simulation config:")
         print("{}".format(self.config.config_dict))
 
+    def random_site(self):
+        while True:
+            # First element is domain without protocol, second is popularity
+            site = random.choice(self.sites)
+            try:
+                self.netbase.fetch_site(site[0])
+            except requests.RequestException:
+                self.sites.remove(site)
+            else:
+                return site[0]
+
     def run_round(self, round_num):
         print("Running round number {}!".format(round_num))
         self.hambase.round_init()
 
-        for client in self.clients:
-            client.update_round()
-
-    def random_site(self):
-        while True:
-            site = random.choice(self.sites)
-            try:
-                self.netbase.fetch_site(site)
-            except requests.RequestException:
-                self.sites.remove(site)
-            else:
-                return site
-
-                
-            
-            
-            
-        
+        for c in self.clients:
+            c.update_round()
 
 
 def setup_argparser():
