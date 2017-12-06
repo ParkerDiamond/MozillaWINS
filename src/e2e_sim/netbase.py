@@ -27,7 +27,7 @@ class Cache:
         """
             If site is cached return the cached sitem otherwise return None
         """
-        cached = self.cache.get(sitename):
+        cached = self.cache.get(sitename)
         if cached:
             return cached
         else:

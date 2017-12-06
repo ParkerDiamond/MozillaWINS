@@ -2,7 +2,15 @@
     Simulation Framework
 """
 
+# Python Standard Library
 import argparse
+
+# Local modules
+import hambase
+import netbase
+import client
+
+# 3rd Party Libraries
 import anyconfig
 
 class SimulationConfig:
@@ -15,6 +23,8 @@ class SimulationConfig:
 
     def load_config(self, config_file):
         self.config_dict = anyconfig.load(config_file, ac_parser="yaml")
+        for k, v in self.config_dict.items():
+            setattr(self, k, v)
 
 
 class Simulation:
@@ -25,6 +35,22 @@ class Simulation:
     def __init__(self, config_file):
         self.config = SimulationConfig()
         self.config.load_config(config_file)
+
+        self.netbase = netbase.NetBase()
+
+        num_clients = self.config.num_clients
+        if not isinstance(num_clients, int):
+            raise ValueError('Number of clients in config file is not an integer!')
+
+        self.clients = []
+        for client_num in range(num_clients):
+            self.clients.append(client.Client(self))
+
+        self.hambase = hambase.HamBase(self, self.netbase, self.clients)
+
+    def print_config(self):
+        print("Simulation config:")
+        print("{}".format(self.config))
 
     def run_round(self, round_num):
         print("Running round number {}!".format(round_num))
@@ -47,6 +73,9 @@ def main():
 
     # Setup simulation framework
     sim = Simulation(args.config)
+
+    # Show simulation config
+    sim.print_config()
 
     # Run every round of the simulator
     for round_num in range(args.num_rounds):
