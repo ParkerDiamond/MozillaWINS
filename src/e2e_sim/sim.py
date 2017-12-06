@@ -27,6 +27,15 @@ class SimulationConfig:
             setattr(self, k, v)
 
 
+class Site:
+    def __init__(self, rank, domain, popularity_subnets, popularity_ips):
+        self.rank = rank
+        self.domain = domain
+        self.popularity_subnets = popularity_subnets
+        self.popularity_ips = popularity_ips
+        self.pop_rank = self.popularity_subnets
+
+
 class Simulation:
     """
         Main simulation class
@@ -35,6 +44,9 @@ class Simulation:
     def __init__(self, config_file):
         self.config = SimulationConfig()
         self.config.load_config(config_file)
+
+        self.sites = dict()
+        self.load_sites()
 
         self.netbase = netbase.NetBase()
 
@@ -47,6 +59,23 @@ class Simulation:
             self.clients.append(client.Client(self))
 
         self.hambase = hambase.HamBase(self, self.netbase, self.clients)
+
+    def load_sites(self):
+        with open(self.config.top_sites_file, 'r') as top_sites:
+            reader = csv.reader(csvfile)
+            for i, row in enumerate(reader):
+                if i > self.config.sites_to_load:
+                    break
+
+                rank = int(row['GlobalRank'])
+                sitename = str(row['Domain'])
+                popularity_subnets = int(row['RefSubNets'])
+                popularity_ips = int(row['RefIPs'])
+
+                existing_site = self.sites.get(sitename)
+                if not existing_site:
+                    site = Site(rank, sitename, popularity_subnets, popularity_ips)
+                    sites[sitename] = site
 
     def print_config(self):
         print("Simulation config:")
