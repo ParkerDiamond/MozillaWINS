@@ -12,7 +12,7 @@ int main()
     bvec in, out;
     vec trans;
     
-    in = randb(320);
+    in = randb(321);
  
     coder = new Transcoder();
 

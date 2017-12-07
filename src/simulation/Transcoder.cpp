@@ -3,6 +3,8 @@
 using namespace std;
 using namespace itpp;
 
+int SIZE_BITS = 32;
+
 Transcoder::Transcoder()
 {
     generator = ivec(3);
@@ -15,15 +17,34 @@ Transcoder::Transcoder()
     codec.set_parameters(generator, generator, constraint, interleaver);
 }
 
+void Transcoder::add_size(bvec &input)
+{
+    bvec bsize = dec2bin(SIZE_BITS, input.size());
+    input.ins(0, bsize);
+}
+
+int Transcoder::get_size(bvec &input)
+{
+    return bin2dec(input(0, SIZE_BITS - 1));
+}
+
+void Transcoder::remove_size(bvec &input)
+{
+    int size = get_size(input);
+    input.del(0, SIZE_BITS - 1);
+    if (input.size() > size) input.del(size, -1);
+}
 
 void Transcoder::encode(bvec &input, vec &trans_symbols)
 {
     int padding;
     bvec padded_input, encoded;
 
-    padding = input.size() % block_size;
-    if(padding) padded_input = concat(input, zeros_b(padding));
-    else padded_input = input;
+    padded_input = bvec(input);
+    add_size(padded_input);
+
+    padding = padded_input.size() % block_size;
+    if(padding) padded_input = concat(padded_input, zeros_b(block_size - padding));
 
     codec.encode(padded_input, encoded);
     bpsk.modulate_bits(encoded, trans_symbols);
@@ -32,4 +53,5 @@ void Transcoder::encode(bvec &input, vec &trans_symbols)
 void Transcoder::decode(vec &trans_symbols, bvec &output)
 {
     codec.decode(trans_symbols, output); 
+    remove_size(output);
 }

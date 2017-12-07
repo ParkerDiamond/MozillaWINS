@@ -12,6 +12,10 @@ class Transcoder
         Turbo_Codec codec;
         ivec generator, interleaver;
         int constraint, block_size;
+        void add_size(bvec &input);
+        int get_size(bvec &input);
+        void remove_size(bvec &input);
+        bvec &pad(bvec &input);
 
     public:
         Transcoder();
