@@ -54,7 +54,7 @@ class Simulation:
         self.sites = []
         self.load_sites()
 
-        self.netbase = netbase.NetBase()
+        self.netbase = netbase.NetBase(self)
 
         num_clients = self.config.num_clients
         if not isinstance(num_clients, int):

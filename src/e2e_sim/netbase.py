@@ -47,10 +47,11 @@ class NetBase:
         Internet base station class
     """
 
-    def __init__(self):
+    def __init__(self, sim):
         """
             Initialize the NetBase class
         """
+        self.sim = sim
         self.cache = Cache()
 
     def fetch_site(self, site):
@@ -59,7 +60,7 @@ class NetBase:
         """
         cached_site = self.cache.get_site(site)
         if cached_site:
-            return cached_site.content, cached_site.latency
+            return cached_site.content, self.sim.config.cache_latency
         else:
             url = 'http://' + site
             response = requests.get(url)

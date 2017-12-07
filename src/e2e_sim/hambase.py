@@ -47,14 +47,16 @@ User-Agent: Some agent
             while True:
                 success, txd = radio.attempt_transmission(req_data, self.tx_error)
                 total_txd += txd
-                latency += self.sim.config.one_way_latency
+                latency += self.sim.config.one_way_latency + (len(req_data) / self.bandwidth)
 
                 if success:
                     success, rxd = radio.attempt_transmission(resp_data, self.rx_error)
                     total_rxd += rxd
-                    latency += self.sim.config.one_way_latency
+                    latency += self.sim.config.one_way_latency + (len(resp_data) / self.bandwidth)
                     if success:
                         break
+                    else:
+                        latency += self.retransmit_delay
                 else:
                     latency += self.retransmit_delay
 
@@ -69,7 +71,7 @@ User-Agent: Some agent
 
         self.cache(site)
 
-        print('got {} for client {} in {}s. {} rxd {} txd'.format(site, client.id_num, latency, total_rxd, total_txd))
+        print('got {} for client {} in {:.3f}s. {} rxd {} txd'.format(site, client.id_num, latency, total_rxd, total_txd))
 
         return latency, total_txd, total_rxd
 
