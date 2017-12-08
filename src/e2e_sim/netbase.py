@@ -3,43 +3,7 @@
 """
 
 
-import requests
-
-
-class Site:
-    def __init__(self, sitename, content, latency):
-        """
-            Create a site instance
-        """
-        self.sitename = sitename
-        self.content = content
-        self.latency = latency
-
-
-class Cache:
-    def __init__(self):
-        """
-            Initialize the internal cache dictionary
-        """
-        self.cache = dict()
-
-    def get_site(self, sitename):
-        """
-            If site is cached return the cached sitem otherwise return None
-        """
-        cached = self.cache.get(sitename)
-        if cached:
-            return cached
-        else:
-            return None
-
-    def cache_site(self, sitename, content, latency):
-        """
-            Cache a site in the internal cache dictionary
-        """
-        site = Site(sitename, content, latency)
-        self.cache[sitename] = site
-        return site
+import cache
 
 
 class NetBase:
@@ -52,7 +16,7 @@ class NetBase:
             Initialize the NetBase class
         """
         self.sim = sim
-        self.cache = Cache()
+        self.cache = cache.Cache('data/cached_10000_sites.p')
 
     def fetch_site(self, site):
         """
@@ -62,6 +26,7 @@ class NetBase:
         if cached_site:
             return cached_site.content, self.sim.config.cache_latency
         else:
+            raise ValueError('Invalid site requested: {}'.format(site))
             url = 'http://' + site
             response = requests.get(url)
             latency = response.elapsed.total_seconds()

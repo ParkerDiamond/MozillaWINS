@@ -91,13 +91,13 @@ class Simulation:
     def random_site(self):
         while True:
             # First element is domain without protocol, second is popularity
-            site = random.choice(self.sites)
+            site = random.choice(list(self.netbase.cache.cache))
             try:
-                self.netbase.fetch_site(site[0])
+                self.netbase.fetch_site(site)
             except requests.RequestException:
                 self.sites.remove(site)
             else:
-                return site[0]
+                return site
 
     def run_round(self, round_num):
         print("Running round number {}!".format(round_num))
