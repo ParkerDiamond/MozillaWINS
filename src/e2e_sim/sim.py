@@ -67,7 +67,7 @@ class Simulation:
         self.hambase = hambase.HamBase(self)
 
     def load_sites(self):
-        with open(self.config.top_sites_file, 'r') as top_sites:
+        with open(self.config.top_sites_file, 'r', encoding='utf-8') as top_sites:
             reader = csv.DictReader(top_sites)
             for i, row in enumerate(reader):
                 if i > self.config.sites_to_load:

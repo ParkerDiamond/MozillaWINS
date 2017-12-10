@@ -7,42 +7,52 @@
 using namespace std;
 using namespace itpp;
 
-void corrupt(vec &trans, double perc_corruption)
-{
-    int ncorrupt = int(perc_corruption * trans.size());
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dis(0, trans.size() - 1);
+extern "C" {
+    void corrupt(vec &trans, double perc_corruption)
+    {
+        int ncorrupt = int(perc_corruption * trans.size());
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(0, trans.size() - 1);
 
-    for(int i=0; i < ncorrupt; i++) {
-        int idx = dis(gen);
-        trans(idx) = -1 * trans(idx);
+        for(int i=0; i < ncorrupt; i++) {
+            int idx = dis(gen);
+            trans(idx) = -1 * trans(idx);
+        }
+    }
+
+    // Encodes data, simulated bit errors, and decodes data in place
+
+    void transmit(char *data, int len, double error)
+    {
+        Transcoder *coder;
+        bvec in, out;
+        bvec tmp;
+        vec trans;
+
+        in.set_size(len * 8);
+
+        for(int i = 0; i < len; i++) {
+            tmp = dec2bin(8, data[i]);
+            for(int j = 0; j < 8; j++) {
+                in.set((8*i) + j, tmp[j]);
+            }
+        }
+
+        coder = new Transcoder();
+        coder->encode(in, trans);
+        corrupt(trans, error);
+        coder->decode(trans, out);
+
+        for(int i = 0; i < len; i++) {
+            data[i] = bin2dec(out(i*8, (i*8)+7));
+        }
+
+        return;
     }
 }
 
-// Encodes data, simulated bit errors, and decodes data in place
-void transmit(char *data, int len, double error)
-{
-    Transcoder *coder;
-    bvec in, out;
-    vec trans;
-
-    for(int i = 0; i < len; i++) {
-        in = concat(in, dec2bin(8, data[i]));
-    }
-
-    coder = new Transcoder();
-    coder->encode(in, trans);
-    corrupt(trans, error);
-    coder->decode(trans, out);
-
-    for(int i = 0; i < len; i = i + 8) {
-        data[i] = bin2dec(out(i, i+7));
-    }
-
-    return;
-}
-
+/*
 int main(int argc, char **argv)
 {
     Transcoder *coder;
@@ -67,3 +77,4 @@ int main(int argc, char **argv)
     return 0;
 }
 
+*/
