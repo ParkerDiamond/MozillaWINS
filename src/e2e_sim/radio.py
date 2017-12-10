@@ -2,7 +2,7 @@ import ctypes
 import zlib
 import random
 
-turbolib = ctypes.cdll.LoadLibrary('../libsimpleturbo.so')
+turbolib = ctypes.cdll.LoadLibrary('../simulation/libsimpleturbo.so')
 
 def corrupt(data, error):
     # Check each bit for random error
