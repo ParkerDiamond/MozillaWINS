@@ -38,8 +38,8 @@ extern "C" {
         corrupt(trans, error);
         coder->decode(trans, out);
 
-        for(int i = 0; i < len; i = i + 8) {
-            data[i] = bin2dec(out(i, i+7));
+        for(int i = 0; i < len; i++) {
+            data[i] = bin2dec(out(i*8, (i*8)+7));
         }
 
         return;

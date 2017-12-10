@@ -1,7 +1,7 @@
 OBJS = SimpleTurbo.o Transcoder.o
 CC = /usr/bin/g++
 DEBUG = -g
-CFLAGS = -c -Ofast
+CFLAGS = -c -Ofast -fPIC
 LFLAGS = -litpp
 
 SimpleTurbo: $(OBJS)
