@@ -5,7 +5,7 @@ CFLAGS = -c -Ofast
 LFLAGS = -litpp
 
 SimpleTurbo: $(OBJS)
-	$(CC) -o SimpleTurbo $(OBJS) $(LFLAGS)
+	$(CC) -fPIC -shared -o libsimpleturbo.so $(OBJS) $(LFLAGS)
 
 SimpleTurbo.o: SimpleTurbo.cpp Transcoder.h
 	$(CC) $(CFLAGS) SimpleTurbo.cpp
@@ -14,4 +14,4 @@ Transcoder.o: Transcoder.cpp
 	$(CC) $(CFLAGS) Transcoder.cpp
 
 clean:
-	rm -f $(OBJS) client.o server.o client server SimpleTurbo
+	rm -f $(OBJS) SimpleTurbo

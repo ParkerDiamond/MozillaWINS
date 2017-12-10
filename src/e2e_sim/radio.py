@@ -1,5 +1,8 @@
+import ctypes
 import zlib
 import random
+
+turbolib = ctypes.cdll.LoadLibrary('../libsimpleturbo.so')
 
 def corrupt(data, error):
     # Check each bit for random error
@@ -19,11 +22,7 @@ def attempt_transmission(data, error):
 
     txdata = tcdata + tcsum.to_bytes(4, byteorder='big')
 
-    # TODO turbo encode txdata
-
-    rxdata = corrupt(txdata, error)
-
-    # TODO turbo decode rxdata
+    rxdata = turbo_transmit(txdata, error)
 
     rcdata, rcsum = rxdata[:-4], int.from_bytes(rxdata[-4:], 'big')
 
@@ -38,4 +37,17 @@ def attempt_transmission(data, error):
         return False, 0
 
     return True, len(txdata)
+
+
+def turbo_transmit(data, error):
+    if type(data) == str:
+        data = data.encode('utf-8')
+    c_data = ctypes.c_char_p(data)
+    c_error = ctypes.c_double(error)
+
+    turbolib.transmit(c_data, len(data), c_error)
+
+    return data
+
+
 
