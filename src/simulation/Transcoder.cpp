@@ -31,7 +31,7 @@ int Transcoder::get_size(bvec &input)
 void Transcoder::remove_size(bvec &input)
 {
     int size = get_size(input);
-    int last = size < input.size() - SIZE_BITS ? SIZE_BITS + size - 1 : -1;
+    int last = size < input.size() - SIZE_BITS && size >= 0 ? SIZE_BITS + size - 1 : -1;
     input = input(SIZE_BITS, last);
 }
 
