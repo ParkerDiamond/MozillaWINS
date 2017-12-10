@@ -27,10 +27,16 @@ extern "C" {
     {
         Transcoder *coder;
         bvec in, out;
+        bvec tmp;
         vec trans;
 
+        in.set_size(len * 8);
+
         for(int i = 0; i < len; i++) {
-            in = concat(in, dec2bin(8, data[i]));
+            tmp = dec2bin(8, data[i]);
+            for(int j = 0; j < 8; j++) {
+                in.set((8*i) + j, tmp[j]);
+            }
         }
 
         coder = new Transcoder();
