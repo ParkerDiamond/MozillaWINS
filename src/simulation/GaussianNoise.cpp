@@ -1,3 +1,7 @@
+/*  Author: Parker Diamond
+    COSC 594: Special Topics (Distributed Systems)
+    SARATOGA Turbo Code Effectiveness */
+
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -6,6 +10,13 @@
 
 using namespace std;
 using namespace itpp;
+
+/* This program takes as inputs 2 integers as command line
+   arguments: the noise level in Watts/Hz and the a block
+   size corresponding to the desired frame size. The program
+   will then simulate a Turbo coded transmissions over a noisy
+   channel by adding Gaussian distributed white noise to the
+   transmission. */
 
 int main(int argc, char **argv)
 {
@@ -32,7 +43,11 @@ int main(int argc, char **argv)
         argparse.clear(); 
     }
 
-    // Initialize the Turbo Coder
+    /* Initialize the Turbo Coder with our default Generator
+       matrix and set the interleaver length to the frame size.
+       Initialize as well the frame error counter with the frame
+       size. */
+
     ivec generator = ivec(3);
     generator(0) = 013;
     generator(1) = 015;
@@ -43,6 +58,10 @@ int main(int argc, char **argv)
 
     cout << "BER,FER,Noise" << endl;
     
+    /* Starting with the provided noise level, iterate down to a
+       noise level of zero while transmitting 4 frames on the noisy
+       channel. */
+
     for(int i=noise;i>=0;i--)
     {
         /* Initialize a new channel with the desired noise level

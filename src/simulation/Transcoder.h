@@ -1,3 +1,9 @@
+/* Author: Joseph Parker Diamond
+   Modified by: Kyle Birkeland
+   COSC594: Special Topics (Distributed Systems)
+   Micah Beck
+   SARATOGA Turbo Codes */
+
 #include <iostream>
 #include <functional>
 #include <itpp/itcomm.h>
@@ -5,6 +11,10 @@
 using namespace std;
 using namespace itpp;
 
+/* This class provides a wrapper around the IT++
+   Turbo encoding and decoding functionality as well
+   as methods for padding input and modulating
+   bit transmissions */
 class Transcoder
 {
     private:
