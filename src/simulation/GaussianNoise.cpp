@@ -14,18 +14,17 @@ int main(int argc, char **argv)
     BERC bit_errors;
     BLERC frame_errors;
     stringstream argparse;
-    int block_size, max_bits;
-    double EbN0;
+    int block_size, max_bits, noise;
 
     if(argc != 3)
     {  
-        cout << "Usage: GaussianNoise EbN0 block_size" << endl;
+        cout << "Usage: GaussianNoise noise block_size" << endl;
         return -1;
     }
     else
     {
         argparse << argv[1];
-        argparse >> EbN0;
+        argparse >> noise;
         argparse.clear(); 
 
         argparse << argv[2];
@@ -40,35 +39,44 @@ int main(int argc, char **argv)
     ivec interleaver = wcdma_turbo_interleaver_sequence(block_size);
     coder.set_parameters(generator, generator, 4, interleaver);
 
-    // Initialize the AWGN Channel
-    AWGN_Channel channel(EbN0);
+    //AWGN_Channel channel(noise);
     frame_errors.set_blocksize(block_size);
     
-    for(int i=0;i<50;i++)
+    for(int i=noise;i>=0;i--)
     {
+        /* Initialize a new channel with the desired noise level
+           and clear the error counts from the previous channel. */
+        AWGN_Channel channel(i);
+        bit_errors.clear();
+        frame_errors.clear();
+
+        for(int j=0;j<50;j++)
         {
-            bvec in = randb(2*block_size);
-            vec modulated;
-            bvec buffer, out;
+            /* Run 50 trials of sending/receiving in the noisy channel
+               and count the errors for each trial. */
+            {
+                bvec in = randb(2*block_size);
+                vec modulated;
+                bvec buffer, out;
 
-            coder.encode(in, buffer);
-            bpsk.modulate_bits(buffer, modulated);
+                coder.encode(in, buffer);
+                bpsk.modulate_bits(buffer, modulated);
 
-            modulated = channel(modulated);
-            coder.decode(modulated, out);
+                modulated = channel(modulated);
+                coder.decode(modulated, out);
 
-            bit_errors.count(in,out);
-            frame_errors.count(in,out);
+                bit_errors.count(in,out);
+                frame_errors.count(in,out);
+            }
         }
+
+        /* Report the bit errors and frame errors of the channel for
+           the noise level. */
+        cout << bit_errors.get_errorrate() << ","
+             << frame_errors.get_errorrate() << ","
+             << i << endl;
     }
-
-    cout << "Simulated " << frame_errors.get_total_blocks() 
-         << " frames and " << bit_errors.get_total_bits() << " bits." << endl;
-    
-    cout << "Obtained " << bit_errors.get_errors() << " bit errors. " << endl
-         << " BER: " << bit_errors.get_errorrate() << endl
-         << " FER: " << frame_errors.get_errorrate() << endl;
-
+ 
     return 0;
 }
 
