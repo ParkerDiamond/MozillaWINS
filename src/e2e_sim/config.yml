@@ -10,5 +10,5 @@ rx_error: 0.1
 one_way_latency: 0.001
 round_length:  1.0
 cache_latency: 0.0
-num_rounds: 100
-
+num_rounds: 10000
+results_file: results.txt

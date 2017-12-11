@@ -1,0 +1,13 @@
+num_clients:
+sites_to_load:
+client_request_rate: [10, 25, 50, 75, 100]
+ham_bandwidth:
+ham_retransmit_delay:
+max_cache: [1000, 2500, 5000, 10000]
+tx_error: [0.05, 0.1, 0.15]
+rx_error: [0.05, 0.1, 0.15]
+one_way_latency:
+round_length:
+cache_latency:
+num_rounds:
+results_file:

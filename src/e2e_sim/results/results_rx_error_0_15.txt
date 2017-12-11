@@ -1,0 +1,1 @@
+hambase_bytes_txd_rxd,hit_rate,drop_rate,retransmit_rate,avg_latency
