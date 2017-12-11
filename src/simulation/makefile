@@ -22,4 +22,4 @@ Transcoder.o: Transcoder.cpp
 all: libsimpleturbo.so GaussianNoise
 
 clean:
-	rm -f $(OBJS) SimpleTurbo
+	rm -f $(OBJS) SimpleTurbo libsimpleturbo.so
