@@ -39,8 +39,9 @@ int main(int argc, char **argv)
     ivec interleaver = wcdma_turbo_interleaver_sequence(block_size);
     coder.set_parameters(generator, generator, 4, interleaver);
 
-    //AWGN_Channel channel(noise);
     frame_errors.set_blocksize(block_size);
+
+    cout << "BER,FER,Noise" << endl;
     
     for(int i=noise;i>=0;i--)
     {
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
             /* Run 50 trials of sending/receiving in the noisy channel
                and count the errors for each trial. */
             {
-                bvec in = randb(2*block_size);
+                bvec in = randb(4*block_size);
                 vec modulated;
                 bvec buffer, out;
 
