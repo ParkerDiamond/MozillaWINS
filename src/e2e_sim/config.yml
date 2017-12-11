@@ -1,13 +1,14 @@
-num_clients: 100
+num_clients: 1
 top_sites_file: "data/majestic_million.csv"
 sites_to_load: 10000
-client_request_rate: 0.001 # requests per second
-ham_bandwidth: 10000.0
+client_request_rate: 50 # requests per second
+ham_bandwidth: 1000000.0
 ham_retransmit_delay: 1.0
-max_cache: 100
-tx_error: 0.0
-rx_error: 0.0
-one_way_latency: 1.0
-round_length:  100.0
+max_cache: 1000
+tx_error: 0.1
+rx_error: 0.1
+one_way_latency: 0.001
+round_length:  1.0
 cache_latency: 0.0
+num_rounds: 100
 

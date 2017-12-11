@@ -4,7 +4,7 @@ DEBUG = -g
 CFLAGS = -c -Ofast -fPIC -std=c++11
 LFLAGS = -litpp
 
-SimpleTurbo: $(OBJS)
+libsimpleturbo.so: $(OBJS)
 	$(CC) -fPIC -shared -o libsimpleturbo.so $(OBJS) $(LFLAGS)
 
 GaussianNoise: GaussianNoise.o
@@ -19,7 +19,7 @@ SimpleTurbo.o: SimpleTurbo.cpp Transcoder.h
 Transcoder.o: Transcoder.cpp
 	$(CC) $(CFLAGS) Transcoder.cpp
 
-all: SimpleTurbo GaussianNoise
+all: libsimpleturbo.so GaussianNoise
 
 clean:
 	rm -f $(OBJS) SimpleTurbo

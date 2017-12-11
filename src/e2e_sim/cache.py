@@ -42,7 +42,6 @@ class Cache:
         """
             Cache a site in the internal cache dictionary
         """
-        
         site = Site(sitename, content, latency)
         self.cache[sitename] = site
         return site
