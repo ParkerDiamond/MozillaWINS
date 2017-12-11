@@ -4,17 +4,19 @@
 
 
 import pickle
+import random
 import sys
 
 
 class Site:
-    def __init__(self, sitename, content, latency):
+    def __init__(self, sitename, popularity, content, latency):
         """
             Create a site instance
         """
         self.sitename = sitename
         self.content = content
         self.latency = latency
+        self.popularity = popularity
 
 class Cache:
     def __init__(self, cachefile=None):
@@ -22,14 +24,14 @@ class Cache:
             Initialize the internal cache dictionary
         """
         self.cache = dict()
-		self.sites = []
+        self.sites = []
         if cachefile:
             try:
                 with open(cachefile, 'rb') as cf:
                     saved_sites = pickle.load(cf)
                     for sitename, popularity, latency, content  in saved_sites:
                         if content is None: continue
-                        self.cache_site(sitename, content, latency)
+                        self.cache_site(sitename, popularity, content, latency)
             except Exception as e:
                 print('Failed to open cachefile "{}": {}'.format(cachefile, e), file=sys.stderr)
 
@@ -49,11 +51,11 @@ class Cache:
                 return site
 
 
-    def cache_site(self, sitename, content, latency):
+    def cache_site(self, sitename, popularity, content, latency):
         """
             Cache a site in the internal cache dictionary
         """
-        site = Site(sitename, content, latency)
+        site = Site(sitename, popularity, content, latency)
         self.cache[sitename] = site
-       	self.sites.append(site)
+        self.sites.append(site)
         return site

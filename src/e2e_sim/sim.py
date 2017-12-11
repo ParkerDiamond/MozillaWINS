@@ -90,7 +90,7 @@ class Simulation:
 
     def random_site(self):
         while True:
-            site = self.netbase.random_site().sitename
+            site = self.netbase.cache.random_site().sitename
             try:
                 self.netbase.fetch_site(site)
             except requests.RequestException:
