@@ -15,6 +15,7 @@ Transcoder::Transcoder()
 
     interleaver = wcdma_turbo_interleaver_sequence(320);
     codec.set_parameters(generator, generator, constraint, interleaver);
+    codec.set_adaptive_stop(true);
 }
 
 void Transcoder::add_size(bvec &input)
