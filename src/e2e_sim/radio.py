@@ -40,7 +40,6 @@ def attempt_transmission(data, error):
 
 
 def turbo_transmit(data, error):
-    return data
     if type(data) == str:
         data = data.encode('utf-8')
     c_data = ctypes.c_char_p(data)
