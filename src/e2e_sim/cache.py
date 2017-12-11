@@ -22,6 +22,7 @@ class Cache:
             Initialize the internal cache dictionary
         """
         self.cache = dict()
+		self.sites = []
         if cachefile:
             try:
                 with open(cachefile, 'rb') as cf:
@@ -38,10 +39,21 @@ class Cache:
         """
         return self.cache.get(sitename)
 
+    def random_site(self):
+        total = sum(site.popularity for site in self.sites)
+        r = random.randint(0, total-1)
+        cumsum = 0
+        for site in self.sites:
+            cumsum += site.popularity
+            if r < cumsum:
+                return site
+
+
     def cache_site(self, sitename, content, latency):
         """
             Cache a site in the internal cache dictionary
         """
         site = Site(sitename, content, latency)
         self.cache[sitename] = site
+       	self.sites.append(site)
         return site

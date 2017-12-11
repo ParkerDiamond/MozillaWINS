@@ -90,8 +90,7 @@ class Simulation:
 
     def random_site(self):
         while True:
-            # First element is domain without protocol, second is popularity
-            site = random.choice(list(self.netbase.cache.cache))
+            site = self.netbase.random_site().sitename
             try:
                 self.netbase.fetch_site(site)
             except requests.RequestException:
