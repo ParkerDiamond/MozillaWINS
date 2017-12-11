@@ -106,6 +106,12 @@ class Simulation:
         for c in self.clients:
             c.update_round()
 
+        self.hambase.round_end()
+
+    def run(self):
+        for round_num in range(self.config.num_rounds):
+            self.run_round(round_num)
+
 
 def setup_argparser():
     """
@@ -113,7 +119,6 @@ def setup_argparser():
     """
     parser = argparse.ArgumentParser(description='End-to-End SARATOGA Simulation Framework')
     parser.add_argument("-c", "--config", dest='config', type=str, default='config.yml', help="Config filename")
-    parser.add_argument("-nr", "--num-rounds", dest='num_rounds', type=int, default=1000, help="Number of rounds to run")
     return parser
 
 
@@ -129,8 +134,7 @@ def main():
     sim.print_config()
 
     # Run every round of the simulator
-    for round_num in range(args.num_rounds):
-        sim.run_round(round_num)
+    sim.run()
 
 
 if __name__ == '__main__':

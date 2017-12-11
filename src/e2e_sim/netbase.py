@@ -24,7 +24,7 @@ class NetBase:
         """
         cached_site = self.cache.get_site(site)
         if cached_site:
-            return cached_site.content, self.sim.config.cache_latency
+            return cached_site.content, cached_site.latency
         else:
             raise ValueError('Invalid site requested: {}'.format(site))
             url = 'http://' + site
