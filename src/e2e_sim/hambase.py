@@ -27,10 +27,11 @@ class HamBase:
         self.round_txd_rxd = 0
 
     def round_end(self):
-        print('hambase bytes txd_rxd: {}'.format(self.round_txd_rxd))
-        print('hit rate: {:f}'.format(self.n_hits / self.n_reqs))
-        print('drop rate: {:f}'.format(self.n_dropped / self.n_reqs))
-        print('retransmit rate: {:f}'.format(self.retransmits / self.n_reqs))
+        print('[RESULT] hambase bytes txd_rxd: {}'.format(self.round_txd_rxd))
+        print('[RESULT] hit rate: {:f}'.format(self.n_hits / self.n_reqs))
+        print('[RESULT] drop rate: {:f}'.format(self.n_dropped / self.n_reqs))
+        print('[RESULT] retransmit rate: {:f}'.format(self.retransmits / self.n_reqs))
+        print('[RESULT] avg latency: {:f}'.format(sum(self.latencies) / self.n_served))
 
     def generate_request(self, site):
         'generate a semi-realistic HTTP request'
